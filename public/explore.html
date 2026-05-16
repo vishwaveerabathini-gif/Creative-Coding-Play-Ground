@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Explore - Creative Coding Playground</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 50px;
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+        }
+
+        nav button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 14px;
+            background: #111;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        nav button:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: #ccc;
+            max-width: 900px;
+            margin: auto;
+            line-height: 1.7;
+        }
+
+        /* Cards */
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: auto;
+            padding: 40px 0 80px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #111;
+            padding: 30px;
+            border-radius: 22px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.12);
+        }
+
+        .card h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .card p {
+            color: #ddd;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .card span {
+            color: #00ffae;
+            font-weight: 600;
+        }
+
+        /* Bottom CTA */
+        .bottom {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .bottom h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .bottom p {
+            font-size: 20px;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .bottom a {
+            text-decoration: none;
+        }
+
+        .bottom button {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 15px;
+            font-size: 22px;
+            font-weight: 600;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .bottom button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media(max-width:768px) {
+
+            nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .logo {
+                font-size: 30px;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .card h2 {
+                font-size: 24px;
+            }
+
+            .card p {
+                font-size: 16px;
+            }
+
+            .bottom h2 {
+                font-size: 30px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">Creative Coding Playground</div>
+
+        <div class="nav-buttons">
+            <a href="index.html"><button>Home</button></a>
+            <a href="login.html"><button>Login</button></a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Explore Our Website 🚀</h1>
+
+        <p>
+            Understand every page, feature, and learning path before you begin.
+            This platform is designed to help students practice coding,
+            improve problem solving, and track progress in a smart way.
+        </p>
+    </section>
+
+    <!-- Cards -->
+    <div class="container">
+
+        <div class="grid">
+
+            <div class="card">
+                <h2>📘 Languages Page</h2>
+                <p><span>Contains:</span> Java, Python, C, C++, and more languages.</p>
+                <p><span>How it works:</span> User selects preferred language and enters a customized learning path.</p>
+                <p><span>Benefit:</span> Easy learning based on your interest.</p>
+            </div>
+
+            <div class="card">
+                <h2>📗 Topics Page</h2>
+                <p><span>Contains:</span> Arrays, Strings, OOPs, DBMS, DSA, Recursion and important concepts.</p>
+                <p><span>How it works:</span> Each topic opens learning content and coding practice.</p>
+                <p><span>Benefit:</span> Structured learning without confusion.</p>
+            </div>
+
+            <div class="card">
+                <h2>💻 Practice Zone</h2>
+                <p><span>Contains:</span> Coding problems from Easy, Medium and Hard levels.</p>
+                <p><span>How it works:</span> Solve questions in editor and improve logic.</p>
+                <p><span>Benefit:</span> Helps in interviews and placements.</p>
+            </div>
+
+            <div class="card">
+                <h2>📊 Dashboard</h2>
+                <p><span>Contains:</span> Progress report, solved questions, completed topics, streaks.</p>
+                <p><span>How it works:</span> Updates automatically when user learns or solves problems.</p>
+                <p><span>Benefit:</span> Motivates consistency.</p>
+            </div>
+
+            <div class="card">
+                <h2>🔐 Login / Signup</h2>
+                <p><span>Contains:</span> Secure account system.</p>
+                <p><span>How it works:</span> Saves user data and progress.</p>
+                <p><span>Benefit:</span> Continue learning anytime.</p>
+            </div>
+
+            <div class="card">
+                <h2>🏆 Leaderboard</h2>
+                <p><span>Contains:</span> Rankings of active learners.</p>
+                <p><span>How it works:</span> Based on scores, streak and activity.</p>
+                <p><span>Benefit:</span> Creates healthy competition.</p>
+            </div>
+
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="bottom">
+            <h2>Ready to Start Learning?</h2>
+            <p>Login now and begin your coding journey with us.</p>
+
+            <a href="login.html">
+                <button>Get Started</button>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

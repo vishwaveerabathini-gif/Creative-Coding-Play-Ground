@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+        }
+
+        #editor {
+            width: 100%;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 20px;
+            background: #1e1e1e;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+            color: #111;
+            padding: 28px;
+            border-radius: 22px;
+            margin-bottom: 25px;
+        }
+
+        h1,
+        p {
+            margin-bottom: 10px;
+        }
+
+        pre {
+            background: #111;
+            color: #00ff88;
+            padding: 15px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 320px;
+            padding: 18px;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            resize: none;
+            outline: none;
+        }
+
+        button {
+            margin-top: 15px;
+            margin-right: 10px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 14px;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            opacity: .9;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        #helpBox {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .friend {
+            background: #fff;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #000;
+            gap: 10px;
+        }
+
+        .sent-btn {
+            background: gray;
+            cursor: not-allowed;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-box {
+            background: #fff;
+            color: #000;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 320px;
+        }
+
+        #chatSection {
+            margin-top: 25px;
+            display: none;
+        }
+
+        #chatBox {
+            background: #111;
+            color: #fff;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        #chatMessages {
+            height: 220px;
+            overflow-y: auto;
+            background: #000;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .msg {
+            background: #222;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        #chatInput {
+            width: 75%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        #chatSend {
+            padding: 12px 18px;
+        }
+    </style>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
+
+<script>
+    require.config({
+        paths: {
+            vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs'
+        }
+    });
+
+    window.MonacoEnvironment = {
+        getWorkerUrl: function () {
+            return `data:text/javascript;charset=utf-8,
+        self.MonacoEnvironment = {
+            baseUrl: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/'
+        };
+        importScripts('https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/base/worker/workerMain.js');`;
+        }
+    };
+
+    require(["vs/editor/editor.main"], function () {
+
+        editor = monaco.editor.create(
+            document.getElementById("editor"),
+            {
+                value: "// Write code here",
+                language: lang,
+                theme: "vs-dark",
+                automaticLayout: true,
+                fontSize: 18
+            }
+        );
+
+    });
+</script>
+
+<body>
+
+    <div class="card">
+        <h1 id="title">Code Editor</h1>
+        <p id="desc">Write your code below and test it.</p>
+
+        <h3>Example:</h3>
+        <pre id="example">No Example</pre>
+    </div>
+
+    <div class="card">
+
+        <div id="editor"></div>
+
+        <button onclick="checkCode()">Check Code</button>
+        <button onclick="openHelp()">🆘 Need Help From Friend</button>
+
+        <div id="result"></div>
+
+        <div id="helpBox">
+            <h3>Select Friend</h3>
+            <div id="friendsList"></div>
+        </div>
+
+    </div>
+
+    <div class="card" id="chatSection">
+
+        <h2>💬 Help Chat</h2>
+
+        <div id="chatBox">
+
+            <div id="chatMessages"></div>
+
+            <input type="text" id="chatInput" placeholder="Type message...">
+
+            <button id="chatSend" onclick="sendMessage()">
+                Send
+            </button>
+
+        </div>
+    </div>
+
+    <div id="popup">
+        <div class="popup-box">
+            <h2 id="popupText">Done</h2>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let editor;
+        let lang = "javascript";
+
+        require.config({
+            paths: {
+                vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs'
+            }
+        });
+
+        require(["vs/editor/editor.main"], function () {
+
+            editor = monaco.editor.create(
+                document.getElementById("editor"),
+                {
+                    value: data.starterCode[lang] || "",
+                    language: "javascript",
+                    theme: "vs-dark",
+                    automaticLayout: true,
+                    fontSize: 18
+                }
+            );
+
+        });
+        let data =
+            JSON.parse(localStorage.getItem("questionData"));
+
+        if (data) {
+            document.getElementById("title").innerText = data.title;
+
+            document.getElementById("desc").innerText = data.desc;
+
+            document.getElementById("example").innerText = data.example;
+        }
+
+        let currentUser =
+            localStorage.getItem("currentUser") || "Teja";
+
+        /* CHECK CODE */
+        async function checkCode() {
+
+            try {
+
+                let expectedOutput =
+                    data.example.split("=>")[1].trim();
+
+                let userOutput =
+                    prompt("Enter output produced by your code");
+
+                if (
+                    userOutput.toLowerCase().replace(/\s/g, "") ===
+                    expectedOutput.toLowerCase().replace(/\s/g, "")
+                ) {
+
+                    document.getElementById("result").innerHTML =
+                        "✅ Correct Answer";
+
+                    document.getElementById("result").style.color =
+                        "green";
+
+                } else {
+
+                    document.getElementById("result").innerHTML =
+                        "❌ Wrong Answer";
+
+                    document.getElementById("result").style.color =
+                        "red";
+                }
+
+            } catch (error) {
+
+                document.getElementById("result").innerHTML =
+                    "❌ Error";
+
+                document.getElementById("result").style.color =
+                    "red";
+            }
+        }
+        /* UNIQUE KEY */
+        function makeKey(friend) {
+
+            return currentUser.toLowerCase() + "||" +
+                friend.toLowerCase() + "||" +
+                title.innerText.trim().toLowerCase();
+        }
+
+        /* OPEN HELP */
+        async function openHelp() {
+
+            let res =
+                await fetch("https://creative-coding-play-ground.onrender.com/friends"+ currentUser);
+
+            let friends = await res.json();
+
+            let sent =
+                JSON.parse(localStorage.getItem("sentRequests")) || {};
+
+            document.getElementById("helpBox").style.display = "block";
+
+            if (friends.length === 0) {
+                document.getElementById("friendsList").innerHTML =
+                    "❌ No friends added";
+                return;
+            }
+
+            let output = "";
+
+            friends.forEach(friend => {
+
+                let key = makeKey(friend);
+
+                if (sent[key]) {
+
+                    output += `
+<div class="friend">
+<span>${friend}</span>
+<button class="sent-btn" disabled>
+Request Sent ✔
+</button>
+</div>`;
+
+                } else {
+
+                    output += `
+<div class="friend">
+<span>${friend}</span>
+<button onclick="sendHelp('${friend}')">
+Ask Help
+</button>
+</div>`;
+                }
+
+            });
+
+            document.getElementById("friendsList").innerHTML = output;
+        }
+
+        /* SEND HELP */
+        async function sendHelp(friend) {
+
+            let sent =
+                JSON.parse(localStorage.getItem("sentRequests")) || {};
+
+            let key = makeKey(friend);
+
+            if (sent[key]) {
+                openHelp();
+                return;
+            }
+
+            await fetch("https://creative-coding-play-ground.onrender.com/sendHelp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    from: currentUser,
+                    to: friend,
+                    question: title.innerText,
+                    desc: desc.innerText,
+                    example: example.innerText
+                })
+            });
+
+            sent[key] = true;
+
+            localStorage.setItem(
+                "sentRequests",
+                JSON.stringify(sent)
+            );
+
+            openHelp();
+
+            document.getElementById("popupText").innerText =
+                "✅ Request Sent to " + friend;
+
+            document.getElementById("popup").style.display = "flex";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display =
+                "none";
+        }
+
+        /* CHAT SYSTEM */
+        let roomId = "";
+
+        document.getElementById("chatSection").style.display = "none";
+
+        async function checkChatPermission() {
+
+            let res = await fetch("https://creative-coding-play-ground.onrender.com/profile/" + currentUser);
+            let user = await res.json();
+
+            roomId = "";
+
+            let currentQuestion =
+                title.innerText.trim().toLowerCase();
+
+            let savedRoom =
+                localStorage.getItem("chatRoomId");
+
+            /* If clicked Open Chat */
+            if (savedRoom) {
+
+                let roomQuestion =
+                    savedRoom.split("_")[0]
+                        .trim()
+                        .toLowerCase();
+
+                if (roomQuestion === currentQuestion) {
+                    roomId = savedRoom;
+                }
+            }
+
+            /* If already active chat */
+            if (!roomId && user.activeChats) {
+
+                let found = user.activeChats.find(room => {
+
+                    let roomQuestion =
+                        room.split("_")[0]
+                            .trim()
+                            .toLowerCase();
+
+                    return roomQuestion === currentQuestion;
+                });
+
+                if (found) roomId = found;
+            }
+
+            if (roomId) {
+
+                document.getElementById("chatSection").style.display =
+                    "block";
+
+                loadMessages();
+
+                setInterval(loadMessages, 2000);
+
+            } else {
+
+                document.getElementById("chatSection").style.display =
+                    "none";
+            }
+        }
+
+        /* SEND MESSAGE */
+        async function sendMessage() {
+
+            let text = document.getElementById("chatInput").value.trim();
+
+            if (text === "") return;
+
+            await fetch("https://creative-coding-play-ground.onrender.com/sendMessage", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    roomId: roomId,
+                    sender: currentUser,
+                    message: text
+                })
+            });
+
+            document.getElementById("chatInput").value = "";
+
+            loadMessages();
+        }
+
+        /* LOAD MESSAGE */
+        async function loadMessages() {
+
+            let res =
+                await fetch("https://creative-coding-play-ground.onrender.com/messages" + roomId);
+
+            let msgs = await res.json();
+
+            let output = "";
+
+            msgs.forEach(m => {
+
+                output += `
+<div class="msg">
+<b>${m.sender}:</b> ${m.message}
+</div>`;
+
+            });
+
+            document.getElementById("chatMessages").innerHTML = output;
+
+            document.getElementById("chatMessages").scrollTop =
+                document.getElementById("chatMessages").scrollHeight;
+        }
+        checkChatPermission();
+
+    </script>
+
+
+</body>
+
+</html>

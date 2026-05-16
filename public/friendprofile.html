@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Friend Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+        }
+
+        .card {
+            max-width: 500px;
+            margin: auto;
+            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+            color: #111;
+            padding: 30px;
+            border-radius: 22px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #000;
+            color: #fff;
+            font-size: 38px;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            margin-bottom: 18px;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        .stat {
+            font-size: 18px;
+            margin: 12px 0;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 14px;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <div class="avatar" id="avatar">U</div>
+
+        <h1 id="friendName">User</h1>
+
+        <div class="stat" id="points">🏆 Points: 0</div>
+        <div class="stat">🔥 Streak: 5</div>
+        <div class="stat" id="topics">📘 Topics Done: 0</div>
+        <div class="stat" id="friendCount">👥 Friends: 0</div>
+        <div class="stat" id="email">📧 Email: -</div>
+        <div class="stat" id="address">📍 Address: -</div>
+
+        <button onclick="window.location.href='profile.html'">⬅ Back</button>
+
+    </div>
+
+    <script>
+
+        let user = localStorage.getItem("viewUser");
+
+        async function loadUser() {
+
+            let res = await fetch("https://creative-coding-play-ground.onrender.com/profile/" + user);
+            let data = await res.json();
+
+            document.getElementById("friendName").innerText = data.username;
+
+            document.getElementById("points").innerText =
+                "🏆 Points: " + (data.points || 0);
+
+            document.getElementById("topics").innerText =
+                "📘 Topics Done: " + (data.solvedQuestions?.length || 0);
+
+            document.getElementById("friendCount").innerText =
+                "👥 Friends: " + (data.friends?.length || 0);
+
+            document.getElementById("email").innerText =
+                "📧 Email: " + (data.email || "-");
+
+            document.getElementById("address").innerText =
+                "📍 Address: " + (data.address || "-");
+
+            if (data.profilePhoto) {
+                document.getElementById("avatar").innerHTML =
+                    `<img src="${data.profilePhoto}">`;
+            } else {
+                document.getElementById("avatar").innerText =
+                    data.username.charAt(0).toUpperCase();
+            }
+        }
+
+        loadUser();
+
+    </script>
+
+</body>
+
+</html>
