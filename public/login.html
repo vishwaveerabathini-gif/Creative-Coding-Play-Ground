@@ -230,14 +230,6 @@
             const username = document.getElementById("newuser").value.trim();
             const password = document.getElementById("newpass").value.trim();
 
-            let users = JSON.parse(localStorage.getItem("users")) || [];
-
-            if (users.includes(username)) {
-                document.getElementById("errorMsg").innerText =
-                    "Username already exists";
-                return;
-            }
-
             fetch("/signup", {
                 method: "POST",
                 headers: {
@@ -249,10 +241,6 @@
                 .then(data => {
 
                     if (data.msg === "Signup successful") {
-
-                        users.push(username);
-                        localStorage.setItem("users", JSON.stringify(users));
-
                         showLogin();
 
                         document.getElementById("errorMsg").innerText =
