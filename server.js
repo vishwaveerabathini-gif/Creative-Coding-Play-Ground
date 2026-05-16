@@ -5,6 +5,11 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/HomePage.html");
+});
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.static("public"));
 
