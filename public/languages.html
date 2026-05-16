@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -149,4 +150,157 @@
 
 </body>
 
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Languages</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #ccc;
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .lang-card {
+            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+            color: #111;
+            padding: 28px;
+            border-radius: 22px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
+            transition: .3s;
+        }
+
+        .lang-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .lang-icon {
+            font-size: 52px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            margin-top: 12px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 14px;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🚀 Choose Your Language</h1>
+        <p>Select your path and start coding</p>
+    </div>
+
+    <div id="languages" class="grid"></div>
+
+    <script>
+
+        const descriptions = {
+            Java: "Object-oriented programming language.",
+            Python: "Simple and powerful language.",
+            Cpp: "Fast and efficient language.",
+            "C++": "Fast and efficient language.",
+            Web: "Frontend + Backend Development."
+        };
+
+        const icons = {
+            Java: "☕",
+            Python: "🐍",
+            Cpp: "⚡",
+            "C++": "⚡",
+            Web: "🌐"
+        };
+
+        fetch("/languages")
+            .then(res => res.json())
+            .then(data => {
+
+                const container = document.getElementById("languages");
+
+                data.forEach(lang => {
+
+                    let displayName = lang === "Cpp" ? "C++" : lang;
+
+                    container.innerHTML += `
+<div class="lang-card">
+<div class="lang-icon">${icons[lang]}</div>
+<h2>${displayName}</h2>
+<p>${descriptions[lang]}</p>
+<button onclick="goToTopics('${lang}')">Explore</button>
+</div>
+`;
+
+                });
+
+            });
+
+        function goToTopics(lang) {
+
+            if (lang === "Java") {
+                localStorage.setItem("language", "java");
+            }
+
+            else if (lang === "Python") {
+                localStorage.setItem("language", "python");
+            }
+
+            else if (lang === "Cpp" || lang === "C++") {
+                localStorage.setItem("language", "cpp");
+            }
+
+            else if (lang === "Web") {
+                localStorage.setItem("language", "html");
+            }
+
+            window.location.href =
+                "topics.html?lang=" + encodeURIComponent(lang);
+        }
+
+    </script>
+
+</body>
+
+>>>>>>> a414f257ee4008c4bf969ab87ceea62acde97535
 </html>
