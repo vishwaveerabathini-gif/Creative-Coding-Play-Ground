@@ -259,10 +259,33 @@
                 .then(data => {
 
                     if (data.msg === "Signup successful") {
+
                         showLogin();
 
+                        setTimeout(() => {
+
+                            document.getElementById("errorMsg").style.color = "green";
+
+                            document.getElementById("errorMsg").innerText =
+                                "Account created successfully";
+
+                        }, 100);
+
+                    }
+                    else if (data.msg === "User already exists") {
+
+                        document.getElementById("errorMsg").style.color = "red";
+
                         document.getElementById("errorMsg").innerText =
-                            "Account created successfully. Please login.";
+                            "Username already exists";
+
+                    }
+                    else {
+
+                        document.getElementById("errorMsg").style.color = "red";
+
+                        document.getElementById("errorMsg").innerText =
+                            "Signup failed";
 
                     }
 
