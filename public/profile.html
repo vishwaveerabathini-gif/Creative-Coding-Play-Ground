@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+        }
+
+        /* ================= NOTIFICATION BUTTON ================= */
+        .notification-btn {
+            position: relative;
+            width: 60px !important;
+            height: 60px !important;
+            padding: 0 !important;
+            min-width: 60px;
+            border: none !important;
+            border-radius: 50% !important;
+            background: #fff !important;
+            color: #000 !important;
+            font-size: 28px !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            z-index: 10000;
+        }
+
+        /* Number Badge */
+        .notification-count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: red;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Popup Box */
+        .notification-box {
+            position: absolute;
+            top: 72px;
+            right: 0;
+            width: 300px;
+            background: #111;
+            color: #fff;
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+            display: none;
+            z-index: 10000;
+        }
+
+        .notification-box.show {
+            display: block;
+        }
+
+        /* ================= MAIN PAGE ================= */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+            color: #111;
+            padding: 28px;
+            border-radius: 22px;
+            margin-bottom: 25px;
+        }
+
+        .profile-top {
+            text-align: center;
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #000;
+            color: #fff;
+            font-size: 38px;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .small {
+            color: #444;
+            margin: 5px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        .stat {
+            text-align: center;
+            background: #fff;
+            padding: 16px;
+            border-radius: 16px;
+        }
+
+        .stat h2 {
+            font-size: 28px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .user,
+        .friend,
+        .request {
+            background: #fff;
+            padding: 14px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Normal Buttons */
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 12px;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            opacity: .9;
+        }
+
+        .bottom-btns {
+            text-align: center;
+        }
+
+        .bottom-btns button {
+            margin: 8px;
+        }
+
+        .nameBtn {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        #editBox {
+            display: none;
+            margin-top: 15px;
+        }
+
+        #msg {
+            color: green;
+            margin-top: 10px;
+        }
+
+        .helpText {
+            font-size: 14px;
+            max-width: 70%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Notification Bell -->
+    <div style="position:fixed; top:20px; right:25px; z-index:9999;">
+
+        <button type="button" class="notification-btn" onclick="toggleNotifications(event)">
+            🔔
+            <span class="notification-count">3</span>
+        </button>
+
+        <div class="notification-box" id="notificationBox">
+            <h3 style="margin-bottom:10px;">Notifications</h3>
+
+            <p style="padding:8px 0; border-bottom:1px solid #333;">
+                New help request
+            </p>
+
+            <p style="padding:8px 0; border-bottom:1px solid #333;">
+                Friend request accepted
+            </p>
+
+            <p style="padding:8px 0;">
+                New message
+            </p>
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <div class="card profile-top">
+
+            <div class="avatar" id="avatar">U</div>
+
+            <h1 id="username">User</h1>
+
+            <p class="small" id="email">user@gmail.com</p>
+            <p class="small" id="address">Address not added</p>
+
+            <br>
+
+            <button onclick="openEdit()">✏ Edit Profile</button>
+
+            <div id="editBox">
+                <br>
+                <input type="email" id="emailInput" placeholder="Enter Email">
+                <input type="text" id="addressInput" placeholder="Enter Address">
+                <input type="file" id="photoInput" accept="image/*">
+                <button onclick="saveProfile()">💾 Save</button>
+                <div id="msg"></div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="grid">
+
+                <div class="stat">
+                    <h2 id="points">0</h2>
+                    <p>Points</p>
+                </div>
+
+                <div class="stat">
+                    <h2 id="friendCount">0</h2>
+                    <p>Friends</p>
+                </div>
+
+                <div class="stat">
+                    <h2 id="followersCount">0</h2>
+                    <p>Followers</p>
+                </div>
+
+                <div class="stat">
+                    <h2 id="followingCount">0</h2>
+                    <p>Following</p>
+                </div>
+
+                <div class="stat">
+                    <h2>5🔥</h2>
+                    <p>Streak</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📩 Help Requests</h2>
+            <div id="requestBox">Loading...</div>
+        </div>
+
+        <div class="card">
+            <h2>🔍 Find Users</h2>
+            <input type="text" id="search" placeholder="Search username..." onkeyup="searchUsers()">
+            <div id="usersList"></div>
+        </div>
+
+        <div class="card">
+            <h2>👥 Your Friends</h2>
+            <div id="friendsList"></div>
+        </div>
+
+        <div class="card bottom-btns">
+            <button onclick="window.location.href='dashboard.html'">
+                ⬅ Dashboard
+            </button>
+
+            <button onclick="logout()">
+                🚪 Logout
+            </button>
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+
+    let currentUser = localStorage.getItem("currentUser") || "Teja";
+
+    let users = [];
+    let friends = [];
+    let following = [];
+    let profilePhoto = "";
+
+    /* LOAD PROFILE */
+    async function loadProfile() {
+
+        let res = await fetch("/profile/" + currentUser);
+        let data = await res.json();
+
+        username.innerText = data.username;
+        email.innerText = data.email || "user@gmail.com";
+        address.innerText = data.address || "Address not added";
+        points.innerText = data.points || 0;
+
+        profilePhoto = data.profilePhoto || "";
+
+        if (profilePhoto) {
+            avatar.innerHTML =
+                `<img src="${profilePhoto}">`;
+        } else {
+            avatar.innerText =
+                currentUser.charAt(0).toUpperCase();
+        }
+
+    }
+
+    /* COUNTS */
+    async function loadCounts() {
+
+        let f1 = await fetch("/friends/" + currentUser);
+        let f2 = await fetch("/followers/" + currentUser);
+        let f3 = await fetch("/following/" + currentUser);
+
+        friends = await f1.json();
+        let followers = await f2.json();
+        following = await f3.json();
+
+        friendCount.innerText = friends.length;
+        followersCount.innerText = followers.length;
+        followingCount.innerText = following.length;
+
+    }
+
+    /* USERS */
+    async function loadUsers() {
+
+        let res = await fetch("/allUsers");
+        users = await res.json();
+        users = users.map(u => u.username);
+
+        showUsers(users);
+
+    }
+
+    /* SHOW USERS */
+    function showUsers(list) {
+
+        let output = "";
+
+        list.forEach(user => {
+
+            if (user !== currentUser) {
+
+                let btn = "";
+
+                if (following.includes(user)) {
+
+                    btn =
+                        `<button onclick="unfollowUser('${user}')">
+Unfollow
+</button>`;
+
+                } else {
+
+                    btn =
+                        `<button onclick="followUser('${user}')">
+Follow
+</button>`;
+
+                }
+
+                output += `
+<div class="user">
+
+<span class="nameBtn"
+onclick="openUser('${user}')">
+${user}
+</span>
+
+${btn}
+
+</div>`;
+
+            }
+
+        });
+
+        usersList.innerHTML =
+            output || "No users found";
+
+    }
+
+    /* FOLLOW */
+    async function followUser(name) {
+
+        await fetch("/followUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: currentUser,
+                targetUser: name
+            })
+        });
+
+        startPage();
+
+    }
+
+    /* UNFOLLOW */
+    async function unfollowUser(name) {
+
+        await fetch("/unfollowUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: currentUser,
+                targetUser: name
+            })
+        });
+
+        startPage();
+
+    }
+
+    /* FRIENDS */
+    function showFriends() {
+
+        let output = "";
+
+        friends.forEach(name => {
+
+            output += `
+<div class="friend">
+
+<span class="nameBtn"
+onclick="openUser('${name}')">
+${name}
+</span>
+
+<button onclick="removeFriend('${name}')">
+Remove
+</button>
+
+</div>`;
+
+        });
+
+        friendsList.innerHTML =
+            output || "No friends added";
+
+    }
+
+    /* REMOVE FRIEND */
+    async function removeFriend(name) {
+
+        await fetch("/removeFriend", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: currentUser,
+                friendName: name
+            })
+        });
+
+        startPage();
+
+    }
+
+    /* SEARCH */
+    function searchUsers() {
+
+        let text = search.value.toLowerCase();
+
+        let filtered = users.filter(user =>
+            user.toLowerCase().includes(text)
+        );
+
+        showUsers(filtered);
+
+    }
+
+    /* OPEN OTHER PROFILE */
+    function openUser(name) {
+
+        localStorage.setItem("viewUser", name);
+        window.location.href =
+            "friendprofile.html";
+
+    }
+
+    /* EDIT */
+    function openEdit() {
+        editBox.style.display = "block";
+    }
+
+    /* SAVE PROFILE */
+    function saveProfile() {
+
+        let mail = emailInput.value.trim();
+        let addr = addressInput.value.trim();
+        let file = photoInput.files[0];
+
+        if (file) {
+
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                updateProfile(mail, addr, e.target.result);
+            };
+
+            reader.readAsDataURL(file);
+
+        } else {
+            updateProfile(mail, addr, profilePhoto);
+        }
+
+    }
+
+    async function updateProfile(mail, addr, photo) {
+
+        await fetch("/updateProfile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: currentUser,
+                email: mail,
+                address: addr,
+                profilePhoto: photo
+            })
+        });
+
+        msg.innerText = "✅ Profile Updated";
+
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+
+    }
+
+    /* HELP REQUESTS */
+    async function loadRequests() {
+
+        let res =
+            await fetch("/helpRequests/" + currentUser);
+
+        let reqs = await res.json();
+
+        if (reqs.length === 0) {
+            requestBox.innerHTML = "No Requests";
+            return;
+        }
+
+        let output = "";
+
+        reqs.forEach(req => {
+
+            let buttons = "";
+
+            console.log(req);
+
+            if (req.status === "accepted") {
+
+                buttons = `
+<button onclick="openQuestion(
+'${req.question}',
+\`${req.desc}\`,
+\`${req.example}\`,
+'${req.from}'
+)">
+Open Chat
+</button>`;
+
+            } else {
+
+                buttons = `
+<button onclick="acceptReq('${req.time}')">
+Accept
+</button>
+
+<button onclick="rejectReq('${req.time}')">
+Reject
+</button>`;
+            }
+
+            output += `
+<div class="request">
+
+<span class="helpText">
+${req.from} needs help in doing ${req.question}
+</span>
+
+${buttons}
+
+</div>`;
+        });
+
+        requestBox.innerHTML = output;
+    }
+
+    /* OPEN QUESTION */
+    function openQuestion(titleText, descText, exampleText, fromUser) {
+
+        let roomId =
+            titleText + "_" + fromUser;
+
+        localStorage.setItem(
+            "chatRoomId",
+            roomId
+        );
+
+        localStorage.setItem(
+            "questionData",
+            JSON.stringify({
+                title: titleText,
+                desc: descText,
+                example: exampleText
+            })
+        );
+
+        window.location.href = "editor.html";
+    }
+    async function acceptReq(time) {
+
+        console.log("Clicked Accept:", time);
+
+        let res = await fetch("/acceptHelp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: currentUser,
+                time: Number(time)
+            })
+        });
+
+        let data = await res.json();
+        console.log(data);
+
+        await loadRequests();
+    }
+
+    async function rejectReq(time) {
+
+        await fetch("/rejectHelp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: currentUser,
+                time: Number(time)
+            })
+        });
+
+        loadRequests();
+    }
+
+    /* LOGOUT */
+    function logout() {
+        window.location.href = "login.html";
+    }
+
+    /* START */
+    async function startPage() {
+
+        await loadProfile();
+        await loadCounts();
+        await loadUsers();
+        showFriends();
+        await loadRequests();
+
+    }
+
+    startPage();
+
+    setInterval(loadRequests, 5000);
+    const box = document.getElementById("notificationBox");
+
+    function toggleNotifications(event) {
+        event.stopPropagation();
+        box.classList.toggle("show");
+    }
+
+    document.onclick = function (e) {
+        if (
+            !e.target.closest(".notification-btn") &&
+            !e.target.closest("#notificationBox")
+        ) {
+            box.classList.remove("show");
+        }
+    };
+
+</script>
+
+</body>
+
+</html>
