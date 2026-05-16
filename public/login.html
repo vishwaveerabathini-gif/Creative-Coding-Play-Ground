@@ -216,10 +216,28 @@
                 .then(data => {
 
                     if (data.msg === "Login success") {
+
                         localStorage.setItem("currentUser", username);
                         window.location.href = "dashboard.html";
-                    } else {
-                        document.getElementById("errorMsg").innerText = "The entered password is not correct";
+
+                    }
+                    else if (data.msg === "User not found") {
+
+                        document.getElementById("errorMsg").innerText =
+                            "User does not exist";
+
+                    }
+                    else if (data.msg === "Wrong password") {
+
+                        document.getElementById("errorMsg").innerText =
+                            "Password is incorrect";
+
+                    }
+                    else {
+
+                        document.getElementById("errorMsg").innerText =
+                            "Something went wrong";
+
                     }
 
                 });
