@@ -1,524 +1,188 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
-<html lang="en">
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topics</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Topics</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+            rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
-        }
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: Poppins, sans-serif;
+            }
 
-        body {
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            padding: 30px;
-        }
+            body {
+                background: #000;
+                color: #fff;
+                min-height: 100vh;
+                padding: 30px;
+            }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+            .header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
 
-        .header h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
+            .header h1 {
+                font-size: 42px;
+                margin-bottom: 10px;
+            }
 
-        .header p {
-            color: #ccc;
-            font-size: 18px;
-        }
+            .header p {
+                color: #ccc;
+                font-size: 18px;
+            }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-        }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 25px;
+            }
 
-        .card {
-            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
-            color: #111;
-            padding: 28px;
-            border-radius: 22px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-            transition: .3s;
-        }
+            .card {
+                background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+                color: #111;
+                padding: 28px;
+                border-radius: 22px;
+                text-align: center;
+                box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
+                transition: .3s;
+            }
 
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
+            .card:hover {
+                transform: translateY(-8px) scale(1.02);
+            }
 
-        .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
+            .icon {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
 
-        .card h2 {
-            margin-bottom: 16px;
-            font-size: 24px;
-            min-height: 70px;
-        }
+            .card h2 {
+                margin-bottom: 16px;
+                font-size: 24px;
+                min-height: 70px;
+            }
 
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 14px;
-            background: #000;
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-        }
+            button {
+                padding: 12px 24px;
+                border: none;
+                border-radius: 14px;
+                background: #000;
+                color: #fff;
+                cursor: pointer;
+                font-weight: 600;
+            }
 
-        button:hover {
-            background: #222;
-        }
+            button:hover {
+                background: #222;
+            }
 
-        .empty {
-            text-align: center;
-            grid-column: 1/-1;
-            font-size: 22px;
-            color: #ccc;
-            margin-top: 40px;
-        }
-    </style>
-</head>
+            .empty {
+                text-align: center;
+                grid-column: 1/-1;
+                font-size: 22px;
+                color: #ccc;
+                margin-top: 40px;
+            }
+        </style>
+    </head>
 
-<body>
+    <body>
 
-    <div class="header">
-        <h1 id="title">Topics</h1>
-        <p>Select a topic and start learning 🚀</p>
-    </div>
+        <div class="header">
+            <h1 id="title">Topics</h1>
+            <p>Select a topic and start learning 🚀</p>
+        </div>
 
-    <div class="grid" id="topics"></div>
+        <div class="grid" id="topics"></div>
 
-    <script>
+        <script>
 
-        const params = new URLSearchParams(window.location.search);
-        let lang = params.get("lang") || "Java";
+            const params = new URLSearchParams(window.location.search);
+            let lang = params.get("lang") || "Java";
 
-        /* Fix C++ issue */
-        if (lang === "C++") {
-            lang = "Cpp";
-        }
+            /* Fix C++ issue */
+            if (lang === "C++") {
+                lang = "Cpp";
+            }
 
-        /* Heading */
-        document.getElementById("title").innerText =
-            (lang === "Cpp" ? "C++" : lang) + " Topics";
+            /* Heading */
+            document.getElementById("title").innerText =
+                (lang === "Cpp" ? "C++" : lang) + " Topics";
 
-        /* Better icon finder */
-        function getIcon(topic) {
+            /* Better icon finder */
+            function getIcon(topic) {
 
-            topic = topic.toLowerCase();
+                topic = topic.toLowerCase();
 
-            if (topic.includes("oop")) return "🏛️";
-            if (topic.includes("array")) return "📚";
-            if (topic.includes("string")) return "🔤";
-            if (topic.includes("linked")) return "🔗";
-            if (topic.includes("stack")) return "📥";
-            if (topic.includes("queue")) return "🚶";
-            if (topic.includes("tree")) return "🌳";
-            if (topic.includes("graph")) return "🌐";
-            if (topic.includes("recursion")) return "🔁";
-            if (topic.includes("dynamic") || topic.includes("dp")) return "⚡";
-            if (topic.includes("pointer")) return "👉";
-            if (topic.includes("stl")) return "🧰";
-            if (topic.includes("function")) return "🛠️";
-            if (topic.includes("loop")) return "🔄";
-            if (topic.includes("list")) return "📋";
-            if (topic.includes("dictionary")) return "📖";
-            if (topic.includes("basic")) return "💡";
-            if (topic.includes("html")) return "🌐";
-            if (topic.includes("css")) return "🎨";
-            if (topic.includes("javascript")) return "⚙️";
-            if (topic.includes("react")) return "⚛️";
-            if (topic.includes("node")) return "🟢";
-            if (topic.includes("mongo")) return "🍃";
-            if (topic.includes("sql")) return "🗄️";
+                if (topic.includes("oop")) return "🏛️";
+                if (topic.includes("array")) return "📚";
+                if (topic.includes("string")) return "🔤";
+                if (topic.includes("linked")) return "🔗";
+                if (topic.includes("stack")) return "📥";
+                if (topic.includes("queue")) return "🚶";
+                if (topic.includes("tree")) return "🌳";
+                if (topic.includes("graph")) return "🌐";
+                if (topic.includes("recursion")) return "🔁";
+                if (topic.includes("dynamic") || topic.includes("dp")) return "⚡";
+                if (topic.includes("pointer")) return "👉";
+                if (topic.includes("stl")) return "🧰";
+                if (topic.includes("function")) return "🛠️";
+                if (topic.includes("loop")) return "🔄";
+                if (topic.includes("list")) return "📋";
+                if (topic.includes("dictionary")) return "📖";
+                if (topic.includes("basic")) return "💡";
+                if (topic.includes("html")) return "🌐";
+                if (topic.includes("css")) return "🎨";
+                if (topic.includes("javascript")) return "⚙️";
+                if (topic.includes("react")) return "⚛️";
+                if (topic.includes("node")) return "🟢";
+                if (topic.includes("mongo")) return "🍃";
+                if (topic.includes("sql")) return "🗄️";
 
-            return "💻";
-        }
+                return "💻";
+            }
 
-        /* Load topics */
-        fetch("https://creative-coding-play-ground.onrender.com/topics/" + lang)
-            .then(res => res.json())
-            .then(data => {
+            /* Load topics */
+            fetch("/topics/" + lang)
+                .then(res => res.json())
+                .then(data => {
 
-                const container = document.getElementById("topics");
+                    const container = document.getElementById("topics");
 
-                if (data.length === 0) {
-                    container.innerHTML =
-                        `<div class="empty">No Topics Found</div>`;
-                    return;
-                }
+                    if (data.length === 0) {
+                        container.innerHTML =
+                            `<div class="empty">No Topics Found</div>`;
+                        return;
+                    }
 
-                data.forEach(topic => {
+                    data.forEach(topic => {
 
-                    container.innerHTML += `
+                        container.innerHTML += `
         <div class="card">
             <div class="icon">${getIcon(topic)}</div>
             <h2>${topic.replaceAll("_", " ")}</h2>
             <button onclick="openLearn('${topic}')">Start</button>
         </div>
         `;
-                });
-
-            });
-
-        /* Open learn */
-        function openLearn(topic) {
-            window.location.href = "learn.html?topic=" + topic;
-        }
-
-    </script>
-
-</body>
-
-=======
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            padding: 30px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            font-size: 38px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #ccc;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
-            color: #111;
-            padding: 28px;
-            border-radius: 22px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .card h2 {
-            margin-bottom: 12px;
-            font-size: 24px;
-        }
-
-        button {
-            padding: 12px 22px;
-            border: none;
-            border-radius: 14px;
-            background: #000;
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        button:hover {
-            background: #222;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="header">
-        <h1 id="title">Topics</h1>
-        <p>Select a topic and start learning 🚀</p>
-    </div>
-
-    <div class="grid" id="topics"></div>
-
-    <script>
-        const params = new URLSearchParams(window.location.search);
-        const lang = params.get("lang");
-
-        document.getElementById("title").innerText = lang + " Topics";
-
-        const icons = {
-            "Arrays": "📚",
-            "Strings": "🔤",
-            "Linked List": "🔗",
-            "Stack": "📥",
-            "Queue": "🚶",
-            "Trees": "🌳",
-            "Graphs": "🌐",
-            "Recursion": "🔁",
-            "Dynamic Programming": "⚡",
-            "DP": "⚡",
-            "OOP": "🏛️",
-            "Pointers": "👉",
-            "STL": "🧰",
-            "Functions": "🛠️",
-            "Loops": "🔄",
-            "Lists": "📋",
-            "Dictionary": "📖",
-            "Basics": "💡"
-        };
-
-        fetch("/topics/" + lang)
-            .then(res => res.json())
-            .then(data => {
-
-                const container = document.getElementById("topics");
-
-                data.forEach(topic => {
-
-                    container.innerHTML += `
-<div class="card">
-<div class="icon">${icons[topic] || "💻"}</div>
-<h2>${topic}</h2>
-<button onclick="openLearn('${topic}')">Start</button>
-</div>
-`;
+                    });
 
                 });
 
-            });
+            /* Open learn */
+            function openLearn(topic) {
+                window.location.href = "learn.html?topic=" + topic;
+            }
 
-        function openLearn(topic) {
-            window.location.href = "learn.html?topic=" + topic;
-        }
-    </script>
+        </script>
 
-</body>
+    </body>
 
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topics</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            min-height: 100vh;
-            padding: 30px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: #ccc;
-            font-size: 18px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
-            color: #111;
-            padding: 28px;
-            border-radius: 22px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
-
-        .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .card h2 {
-            margin-bottom: 16px;
-            font-size: 24px;
-            min-height: 70px;
-        }
-
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 14px;
-            background: #000;
-            color: #fff;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        button:hover {
-            background: #222;
-        }
-
-        .empty {
-            text-align: center;
-            grid-column: 1/-1;
-            font-size: 22px;
-            color: #ccc;
-            margin-top: 40px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="header">
-        <h1 id="title">Topics</h1>
-        <p>Select a topic and start learning 🚀</p>
-    </div>
-
-    <div class="grid" id="topics"></div>
-
-    <script>
-
-        const params = new URLSearchParams(window.location.search);
-        let lang = params.get("lang") || "Java";
-
-        /* Fix C++ issue */
-        if (lang === "C++") {
-            lang = "Cpp";
-        }
-
-        /* Heading */
-        document.getElementById("title").innerText =
-            (lang === "Cpp" ? "C++" : lang) + " Topics";
-
-        /* Better icon finder */
-        function getIcon(topic) {
-
-            topic = topic.toLowerCase();
-
-            if (topic.includes("oop")) return "🏛️";
-            if (topic.includes("array")) return "📚";
-            if (topic.includes("string")) return "🔤";
-            if (topic.includes("linked")) return "🔗";
-            if (topic.includes("stack")) return "📥";
-            if (topic.includes("queue")) return "🚶";
-            if (topic.includes("tree")) return "🌳";
-            if (topic.includes("graph")) return "🌐";
-            if (topic.includes("recursion")) return "🔁";
-            if (topic.includes("dynamic") || topic.includes("dp")) return "⚡";
-            if (topic.includes("pointer")) return "👉";
-            if (topic.includes("stl")) return "🧰";
-            if (topic.includes("function")) return "🛠️";
-            if (topic.includes("loop")) return "🔄";
-            if (topic.includes("list")) return "📋";
-            if (topic.includes("dictionary")) return "📖";
-            if (topic.includes("basic")) return "💡";
-            if (topic.includes("html")) return "🌐";
-            if (topic.includes("css")) return "🎨";
-            if (topic.includes("javascript")) return "⚙️";
-            if (topic.includes("react")) return "⚛️";
-            if (topic.includes("node")) return "🟢";
-            if (topic.includes("mongo")) return "🍃";
-            if (topic.includes("sql")) return "🗄️";
-
-            return "💻";
-        }
-
-        /* Load topics */
-        fetch("/topics/" + lang)
-            .then(res => res.json())
-            .then(data => {
-
-                const container = document.getElementById("topics");
-
-                if (data.length === 0) {
-                    container.innerHTML =
-                        `<div class="empty">No Topics Found</div>`;
-                    return;
-                }
-
-                data.forEach(topic => {
-
-                    container.innerHTML += `
-        <div class="card">
-            <div class="icon">${getIcon(topic)}</div>
-            <h2>${topic.replaceAll("_", " ")}</h2>
-            <button onclick="openLearn('${topic}')">Start</button>
-        </div>
-        `;
-                });
-
-            });
-
-        /* Open learn */
-        function openLearn(topic) {
-            window.location.href = "learn.html?topic=" + topic;
-        }
-
-    </script>
-
-</body>
-
->>>>>>> a414f257ee4008c4bf969ab87ceea62acde97535
-</html>
+    </html>

@@ -1,298 +1,147 @@
-<<<<<<< HEAD
-<!DOCTYPE html>
-<html>
+    <!DOCTYPE html>
+    <html>
 
-<head>
-    <title>Questions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <head>
+        <title>Questions</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
-        }
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: Poppins, sans-serif;
+            }
 
-        body {
-            background: #000;
-            color: #fff;
-            padding: 30px;
-        }
+            body {
+                background: #000;
+                color: #fff;
+                padding: 30px;
+            }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 42px;
-        }
+            h1 {
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 42px;
+            }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 25px;
+            }
 
-        .card {
-            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
-            color: #111;
-            padding: 24px;
-            border-radius: 22px;
-            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-            transition: .3s;
-        }
+            .card {
+                background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+                color: #111;
+                padding: 24px;
+                border-radius: 22px;
+                box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
+                transition: .3s;
+            }
 
-        .card:hover {
-            transform: translateY(-8px);
-        }
+            .card:hover {
+                transform: translateY(-8px);
+            }
 
-        .card h2 {
-            margin-bottom: 12px;
-            font-size: 30px;
-        }
+            .card h2 {
+                margin-bottom: 12px;
+                font-size: 30px;
+            }
 
-        .card p {
-            margin: 8px 0;
-            font-size: 20px;
-        }
+            .card p {
+                margin: 8px 0;
+                font-size: 20px;
+            }
 
-        button {
-            margin-top: 14px;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 14px;
-            background: #000;
-            color: #fff;
-            cursor: pointer;
-            font-size: 18px;
-        }
+            button {
+                margin-top: 14px;
+                width: 100%;
+                padding: 12px;
+                border: none;
+                border-radius: 14px;
+                background: #000;
+                color: #fff;
+                cursor: pointer;
+                font-size: 18px;
+            }
 
-        button:hover {
-            background: #222;
-        }
-    </style>
-</head>
+            button:hover {
+                background: #222;
+            }
+        </style>
+    </head>
 
-<body>
+    <body>
 
-    <h1 id="title"></h1>
+        <h1 id="title"></h1>
 
-    <div class="grid" id="questions"></div>
+        <div class="grid" id="questions"></div>
 
-    <script>
+        <script>
 
-        const params = new URLSearchParams(window.location.search);
-        const topic = params.get("topic") || "Questions";
+            const params = new URLSearchParams(window.location.search);
+            const topic = params.get("topic") || "Questions";
 
-        document.getElementById("title").innerText =
-            topic + " Questions";
+            document.getElementById("title").innerText =
+                topic + " Questions";
 
-       fetch("https://creative-coding-play-ground.onrender.com/questions/" + encodeURIComponent(topic))
-            .then(res => res.json())
-            .then(data => {
+            fetch("/questions/" + encodeURIComponent(topic))
+                .then(res => res.json())
+                .then(data => {
 
-                const container =
-                    document.getElementById("questions");
+                    const container =
+                        document.getElementById("questions");
 
-                container.innerHTML = "";
+                    container.innerHTML = "";
 
-                data.forEach((item) => {
+                    data.forEach((item) => {
 
-                    const name = item.title || item.q;
+                        const name = item.title || item.q;
 
-                    const div = document.createElement("div");
-                    div.className = "card";
+                        const div = document.createElement("div");
+                        div.className = "card";
 
-                    div.innerHTML = `
+                        div.innerHTML = `
 <h2>${name}</h2>
 <p><b>Level:</b> ${item.level || "Easy"}</p>
 <p><b>Acceptance:</b> ${item.rate || "80%"}</p>
 <button>Open Question</button>
 `;
 
-                    div.querySelector("button").onclick = function () {
+                        div.querySelector("button").onclick = function () {
 
-                        const selectedQuestion = {
-                            title: name,
-                            desc: item.desc || "Solve this coding problem.",
-                            example: item.example || "Write code and test it.",
-                            level: item.level || "Easy",
-                            rate: item.rate || "80%",
-                            topic: topic
+                            const selectedQuestion = {
+                                title: name,
+                                desc: item.desc || "Solve this coding problem.",
+                                example: item.example || "Write code and test it.",
+                                level: item.level || "Easy",
+                                rate: item.rate || "80%",
+                                topic: topic
+                            };
+
+                            localStorage.removeItem("questionData");
+
+                            localStorage.setItem(
+                                "questionData",
+                                JSON.stringify(selectedQuestion)
+                            );
+
+                            window.location.href = "editor.html";
+
                         };
 
-                        localStorage.removeItem("questionData");
+                        container.appendChild(div);
 
-                        localStorage.setItem(
-                            "questionData",
-                            JSON.stringify(selectedQuestion)
-                        );
+                    });
 
-                        window.location.href = "editor.html";
-
-                    };
-
-                    container.appendChild(div);
-
+                })
+                .catch(() => {
+                    document.getElementById("questions").innerHTML =
+                        "<h2>No Questions Found</h2>";
                 });
 
-            })
-            .catch(() => {
-                document.getElementById("questions").innerHTML =
-                    "<h2>No Questions Found</h2>";
-            });
+        </script>
 
-    </script>
-
-</body>
-
-=======
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Questions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Poppins, sans-serif;
-        }
-
-        body {
-            background: #000;
-            color: #fff;
-            padding: 30px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 42px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-        }
-
-        .card {
-            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
-            color: #111;
-            padding: 24px;
-            border-radius: 22px;
-            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-        }
-
-        .card h2 {
-            margin-bottom: 12px;
-            font-size: 30px;
-        }
-
-        .card p {
-            margin: 8px 0;
-            font-size: 20px;
-        }
-
-        button {
-            margin-top: 14px;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 14px;
-            background: #000;
-            color: #fff;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        button:hover {
-            background: #222;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1 id="title"></h1>
-
-    <div class="grid" id="questions"></div>
-
-    <script>
-
-        const params = new URLSearchParams(window.location.search);
-        const topic = params.get("topic") || "Questions";
-
-        document.getElementById("title").innerText =
-            topic + " Questions";
-
-        fetch("/questions/" + encodeURIComponent(topic))
-            .then(res => res.json())
-            .then(data => {
-
-                const container =
-                    document.getElementById("questions");
-
-                container.innerHTML = "";
-
-                data.forEach((item) => {
-
-                    const name = item.title || item.q;
-
-                    const div = document.createElement("div");
-                    div.className = "card";
-
-                    div.innerHTML = `
-<h2>${name}</h2>
-<p><b>Level:</b> ${item.level || "Easy"}</p>
-<p><b>Acceptance:</b> ${item.rate || "80%"}</p>
-<button>Open Question</button>
-`;
-
-                    div.querySelector("button").onclick = function () {
-
-                        const selectedQuestion = {
-                            title: name,
-                            desc: item.desc || "Solve this coding problem.",
-                            example: item.example || "Write code and test it.",
-                            level: item.level || "Easy",
-                            rate: item.rate || "80%",
-                            topic: topic
-                        };
-
-                        localStorage.removeItem("questionData");
-
-                        localStorage.setItem(
-                            "questionData",
-                            JSON.stringify(selectedQuestion)
-                        );
-
-                        window.location.href = "editor.html";
-
-                    };
-
-                    container.appendChild(div);
-
-                });
-
-            })
-            .catch(() => {
-                document.getElementById("questions").innerHTML =
-                    "<h2>No Questions Found</h2>";
-            });
-
-    </script>
-
-</body>
-
->>>>>>> a414f257ee4008c4bf969ab87ceea62acde97535
-</html>
+    </body>
+    </html>
