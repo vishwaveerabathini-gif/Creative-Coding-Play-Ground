@@ -153,7 +153,22 @@
         <div id="formArea">
 
             <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
+            <div style="position:relative;">
+
+                <input type="password" id="password" placeholder="password" style="width:100%; padding-right:50px;">
+
+                <span onclick="togglePassword('password')" style="
+            position:absolute;
+            right:18px;
+            top:50%;
+            transform:translateY(-50%);
+            cursor:pointer;
+            font-size:20px;
+        ">
+                    👁️
+                </span>
+
+            </div>
 
             <button class="submit-btn" onclick="login()">Login</button>
 
@@ -177,7 +192,29 @@
 
             document.getElementById("formArea").innerHTML = `
 <input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
+<div style="position:relative;">
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+style="width:100%; padding-right:50px;"
+>
+
+<span
+onclick="togglePassword('password')"
+style="
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:20px;
+">
+👁️
+</span>
+
+</div>
 
 <button class="submit-btn" onclick="login()">Login</button>
 
@@ -198,7 +235,29 @@
 
             document.getElementById("formArea").innerHTML = `
 <input type="text" id="newuser" placeholder="Username">
-<input type="password" id="newpass" placeholder="Password">
+<div style="position:relative;">
+
+<input
+type="password"
+id="newpass"
+placeholder="Password"
+style="width:100%; padding-right:50px;"
+>
+
+<span
+onclick="togglePassword('newpass')"
+style="
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:20px;
+">
+👁️
+</span>
+
+</div>
 
 <button class="submit-btn" onclick="signup()">Create Account</button>
 
@@ -304,7 +363,18 @@
 
         }
 
+        function togglePassword(id) {
 
+            let pass =
+                document.getElementById(id);
+
+            if (pass.type === "password") {
+                pass.type = "text";
+            }
+            else {
+                pass.type = "password";
+            }
+        }
     </script>
 
 </body>
