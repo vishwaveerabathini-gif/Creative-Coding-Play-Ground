@@ -218,17 +218,7 @@
         <div class="notification-box" id="notificationBox">
             <h3 style="margin-bottom:10px;">Notifications</h3>
 
-            <p style="padding:8px 0; border-bottom:1px solid #333;">
-                New help request
-            </p>
-
-            <p style="padding:8px 0; border-bottom:1px solid #333;">
-                Friend request accepted
-            </p>
-
-            <p style="padding:8px 0;">
-                New message
-            </p>
+            <div id="notificationList"></div>
         </div>
 
     </div>
@@ -639,6 +629,35 @@ ${buttons}
 
             requestBox.innerHTML = output;
         }
+        /* NOTIFICATIONS */
+        async function loadNotifications() {
+
+            let res =
+                await fetch("/notifications/" + currentUser);
+
+            let notifications =
+                await res.json();
+
+            let output = "";
+
+            notifications.reverse().forEach(n => {
+
+                output += `
+        <div style="
+            background:#f1f1f1;
+            color:black;
+            padding:14px;
+            border-radius:14px;
+            margin-bottom:10px;
+        ">
+            ${n}
+        </div>`;
+            });
+
+            document.getElementById(
+                "notificationList"
+            ).innerHTML = output || "No notifications";
+        }
 
         /* OPEN QUESTION */
         function openQuestion(titleText, descText, exampleText, fromUser) {
@@ -715,6 +734,7 @@ ${buttons}
             await loadUsers();
             showFriends();
             await loadRequests();
+            await loadNotifications();
 
         }
 
