@@ -317,94 +317,94 @@
         </div>
 
     </div>
-<script>
+    <script>
 
-    let currentUser = localStorage.getItem("currentUser") || "Teja";
+        let currentUser = localStorage.getItem("currentUser") || "Teja";
 
-    let users = [];
-    let friends = [];
-    let following = [];
-    let profilePhoto = "";
+        let users = [];
+        let friends = [];
+        let following = [];
+        let profilePhoto = "";
 
-    /* LOAD PROFILE */
-    async function loadProfile() {
+        /* LOAD PROFILE */
+        async function loadProfile() {
 
-        let res = await fetch("/profile/" + currentUser);
-        let data = await res.json();
+            let res = await fetch("/profile/" + currentUser);
+            let data = await res.json();
 
-        username.innerText = data.username;
-        email.innerText = data.email || "user@gmail.com";
-        address.innerText = data.address || "Address not added";
-        points.innerText = data.points || 0;
+            username.innerText = data.username;
+            email.innerText = data.email || "user@gmail.com";
+            address.innerText = data.address || "Address not added";
+            points.innerText = data.points || 0;
 
-        profilePhoto = data.profilePhoto || "";
+            profilePhoto = data.profilePhoto || "";
 
-        if (profilePhoto) {
-            avatar.innerHTML =
-                `<img src="${profilePhoto}">`;
-        } else {
-            avatar.innerText =
-                currentUser.charAt(0).toUpperCase();
+            if (profilePhoto) {
+                avatar.innerHTML =
+                    `<img src="${profilePhoto}">`;
+            } else {
+                avatar.innerText =
+                    currentUser.charAt(0).toUpperCase();
+            }
+
         }
 
-    }
+        /* COUNTS */
+        async function loadCounts() {
 
-    /* COUNTS */
-    async function loadCounts() {
+            let f1 = await fetch("/friends/" + currentUser);
+            let f2 = await fetch("/followers/" + currentUser);
+            let f3 = await fetch("/following/" + currentUser);
 
-        let f1 = await fetch("/friends/" + currentUser);
-        let f2 = await fetch("/followers/" + currentUser);
-        let f3 = await fetch("/following/" + currentUser);
+            friends = await f1.json();
+            let followers = await f2.json();
+            following = await f3.json();
 
-        friends = await f1.json();
-        let followers = await f2.json();
-        following = await f3.json();
+            friendCount.innerText = friends.length;
+            followersCount.innerText = followers.length;
+            followingCount.innerText = following.length;
 
-        friendCount.innerText = friends.length;
-        followersCount.innerText = followers.length;
-        followingCount.innerText = following.length;
+        }
 
-    }
+        /* USERS */
+        async function loadUsers() {
 
-    /* USERS */
-    async function loadUsers() {
+            let res = await fetch("/allUsers");
+            users = await res.json();
+            users = users.map(u => u.username);
 
-        let res = await fetch("/allUsers");
-        users = await res.json();
-        users = users.map(u => u.username);
+            showUsers(users);
 
-        showUsers(users);
+        }
 
-    }
+        /* SHOW USERS */
+        function showUsers(list) {
 
-    /* SHOW USERS */
-    function showUsers(list) {
+            let output = "";
 
-        let output = "";
+            list.forEach(user => {
 
-        list.forEach(user => {
+                if (user !== currentUser) {
 
-            if (user !== currentUser) {
+                    let btn = "";
 
-                let btn = "";
+                    if (following.includes(user)) {
 
-                if (following.includes(user)) {
-
-                    btn =
-                        `<button onclick="unfollowUser('${user}')">
+                        btn =
+                            `<button onclick="unfollowUser('${user}')">
 Unfollow
 </button>`;
 
-                } else {
+                    } else {
 
-                    btn =
-                        `<button onclick="followUser('${user}')">
+                        btn =
+                            `<button onclick="followUser('${user}')">
 Follow
 </button>`;
 
-                }
+                    }
 
-                output += `
+                    output += `
 <div class="user">
 
 <span class="nameBtn"
@@ -416,59 +416,59 @@ ${btn}
 
 </div>`;
 
-            }
+                }
 
-        });
+            });
 
-        usersList.innerHTML =
-            output || "No users found";
+            usersList.innerHTML =
+                output || "No users found";
 
-    }
+        }
 
-    /* FOLLOW */
-    async function followUser(name) {
+        /* FOLLOW */
+        async function followUser(name) {
 
-        await fetch("/followUser", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: currentUser,
-                targetUser: name
-            })
-        });
+            await fetch("/followUser", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: currentUser,
+                    targetUser: name
+                })
+            });
 
-        startPage();
+            startPage();
 
-    }
+        }
 
-    /* UNFOLLOW */
-    async function unfollowUser(name) {
+        /* UNFOLLOW */
+        async function unfollowUser(name) {
 
-        await fetch("/unfollowUser", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: currentUser,
-                targetUser: name
-            })
-        });
+            await fetch("/unfollowUser", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: currentUser,
+                    targetUser: name
+                })
+            });
 
-        startPage();
+            startPage();
 
-    }
+        }
 
-    /* FRIENDS */
-    function showFriends() {
+        /* FRIENDS */
+        function showFriends() {
 
-        let output = "";
+            let output = "";
 
-        friends.forEach(name => {
+            friends.forEach(name => {
 
-            output += `
+                output += `
 <div class="friend">
 
 <span class="nameBtn"
@@ -482,128 +482,128 @@ Remove
 
 </div>`;
 
-        });
+            });
 
-        friendsList.innerHTML =
-            output || "No friends added";
+            friendsList.innerHTML =
+                output || "No friends added";
 
-    }
-
-    /* REMOVE FRIEND */
-    async function removeFriend(name) {
-
-        await fetch("/removeFriend", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: currentUser,
-                friendName: name
-            })
-        });
-
-        startPage();
-
-    }
-
-    /* SEARCH */
-    function searchUsers() {
-
-        let text = search.value.toLowerCase();
-
-        let filtered = users.filter(user =>
-            user.toLowerCase().includes(text)
-        );
-
-        showUsers(filtered);
-
-    }
-
-    /* OPEN OTHER PROFILE */
-    function openUser(name) {
-
-        localStorage.setItem("viewUser", name);
-        window.location.href =
-            "friendprofile.html";
-
-    }
-
-    /* EDIT */
-    function openEdit() {
-        editBox.style.display = "block";
-    }
-
-    /* SAVE PROFILE */
-    function saveProfile() {
-
-        let mail = emailInput.value.trim();
-        let addr = addressInput.value.trim();
-        let file = photoInput.files[0];
-
-        if (file) {
-
-            let reader = new FileReader();
-
-            reader.onload = function (e) {
-                updateProfile(mail, addr, e.target.result);
-            };
-
-            reader.readAsDataURL(file);
-
-        } else {
-            updateProfile(mail, addr, profilePhoto);
         }
 
-    }
+        /* REMOVE FRIEND */
+        async function removeFriend(name) {
 
-    async function updateProfile(mail, addr, photo) {
+            await fetch("/removeFriend", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: currentUser,
+                    friendName: name
+                })
+            });
 
-        await fetch("/updateProfile", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: currentUser,
-                email: mail,
-                address: addr,
-                profilePhoto: photo
-            })
-        });
+            startPage();
 
-        msg.innerText = "✅ Profile Updated";
-
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
-
-    }
-
-    /* HELP REQUESTS */
-    async function loadRequests() {
-
-        let res =
-            await fetch("/helpRequests/" + currentUser);
-
-        let reqs = await res.json();
-
-        if (reqs.length === 0) {
-            requestBox.innerHTML = "No Requests";
-            return;
         }
 
-        let output = "";
+        /* SEARCH */
+        function searchUsers() {
 
-        reqs.forEach(req => {
+            let text = search.value.toLowerCase();
 
-            let buttons = "";
+            let filtered = users.filter(user =>
+                user.toLowerCase().includes(text)
+            );
 
-            console.log(req);
+            showUsers(filtered);
 
-            if (req.status === "accepted") {
+        }
 
-                buttons = `
+        /* OPEN OTHER PROFILE */
+        function openUser(name) {
+
+            localStorage.setItem("viewUser", name);
+            window.location.href =
+                "friendprofile.html";
+
+        }
+
+        /* EDIT */
+        function openEdit() {
+            editBox.style.display = "block";
+        }
+
+        /* SAVE PROFILE */
+        function saveProfile() {
+
+            let mail = emailInput.value.trim();
+            let addr = addressInput.value.trim();
+            let file = photoInput.files[0];
+
+            if (file) {
+
+                let reader = new FileReader();
+
+                reader.onload = function (e) {
+                    updateProfile(mail, addr, e.target.result);
+                };
+
+                reader.readAsDataURL(file);
+
+            } else {
+                updateProfile(mail, addr, profilePhoto);
+            }
+
+        }
+
+        async function updateProfile(mail, addr, photo) {
+
+            await fetch("/updateProfile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: currentUser,
+                    email: mail,
+                    address: addr,
+                    profilePhoto: photo
+                })
+            });
+
+            msg.innerText = "✅ Profile Updated";
+
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+
+        }
+
+        /* HELP REQUESTS */
+        async function loadRequests() {
+
+            let res =
+                await fetch("/helpRequests/" + currentUser);
+
+            let reqs = await res.json();
+
+            if (reqs.length === 0) {
+                requestBox.innerHTML = "No Requests";
+                return;
+            }
+
+            let output = "";
+
+            reqs.forEach(req => {
+
+                let buttons = "";
+
+                console.log(req);
+
+                if (req.status === "accepted") {
+
+                    buttons = `
 <button onclick="openQuestion(
 '${req.question}',
 \`${req.desc}\`,
@@ -613,9 +613,9 @@ Remove
 Open Chat
 </button>`;
 
-            } else {
+                } else {
 
-                buttons = `
+                    buttons = `
 <button onclick="acceptReq('${req.time}')">
 Accept
 </button>
@@ -623,9 +623,9 @@ Accept
 <button onclick="rejectReq('${req.time}')">
 Reject
 </button>`;
-            }
+                }
 
-            output += `
+                output += `
 <div class="request">
 
 <span class="helpText">
@@ -635,106 +635,110 @@ ${req.from} needs help in doing ${req.question}
 ${buttons}
 
 </div>`;
-        });
+            });
 
-        requestBox.innerHTML = output;
-    }
-
-    /* OPEN QUESTION */
-    function openQuestion(titleText, descText, exampleText, fromUser) {
-
-        let roomId =
-            titleText + "_" + fromUser +"_"+ currentUser;
-
-        localStorage.setItem(
-            "chatRoomId",
-            roomId
-        );
-
-        localStorage.setItem(
-            "questionData",
-            JSON.stringify({
-                title: titleText,
-                desc: descText,
-                example: exampleText
-            })
-        );
-
-        window.location.href = "editor.html";
-    }
-    async function acceptReq(time) {
-
-        console.log("Clicked Accept:", time);
-
-        let res = await fetch("/acceptHelp", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: currentUser,
-                time: Number(time)
-            })
-        });
-
-        let data = await res.json();
-        console.log(data);
-
-        await loadRequests();
-    }
-
-    async function rejectReq(time) {
-
-        await fetch("/rejectHelp", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: currentUser,
-                time: Number(time)
-            })
-        });
-
-        loadRequests();
-    }
-
-    /* LOGOUT */
-    function logout() {
-        window.location.href = "login.html";
-    }
-
-    /* START */
-    async function startPage() {
-
-        await loadProfile();
-        await loadCounts();
-        await loadUsers();
-        showFriends();
-        await loadRequests();
-
-    }
-
-    startPage();
-
-    setInterval(loadRequests, 5000);
-    const box = document.getElementById("notificationBox");
-
-    function toggleNotifications(event) {
-        event.stopPropagation();
-        box.classList.toggle("show");
-    }
-
-    document.onclick = function (e) {
-        if (
-            !e.target.closest(".notification-btn") &&
-            !e.target.closest("#notificationBox")
-        ) {
-            box.classList.remove("show");
+            requestBox.innerHTML = output;
         }
-    };
 
-</script>
+        /* OPEN QUESTION */
+        function openQuestion(titleText, descText, exampleText, fromUser) {
+
+            let roomId =
+                titleText + "_" +
+                [fromUser, currentUser]
+                    .sort()
+                    .join("_");
+
+            localStorage.setItem(
+                "chatRoomId",
+                roomId
+            );
+
+            localStorage.setItem(
+                "questionData",
+                JSON.stringify({
+                    title: titleText,
+                    desc: descText,
+                    example: exampleText
+                })
+            );
+
+            window.location.href = "editor.html";
+        }
+        async function acceptReq(time) {
+
+            console.log("Clicked Accept:", time);
+
+            let res = await fetch("/acceptHelp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: currentUser,
+                    time: Number(time)
+                })
+            });
+
+            let data = await res.json();
+            console.log(data);
+
+            await loadRequests();
+        }
+
+        async function rejectReq(time) {
+
+            await fetch("/rejectHelp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: currentUser,
+                    time: Number(time)
+                })
+            });
+
+            loadRequests();
+        }
+
+        /* LOGOUT */
+        function logout() {
+            window.location.href = "login.html";
+        }
+
+        /* START */
+        async function startPage() {
+
+            await loadProfile();
+            await loadCounts();
+            await loadUsers();
+            showFriends();
+            await loadRequests();
+
+        }
+
+        startPage();
+
+        setInterval(loadRequests, 5000);
+        const box = document.getElementById("notificationBox");
+
+        function toggleNotifications(event) {
+            event.stopPropagation();
+            box.classList.toggle("show");
+        }
+
+        document.onclick = function (e) {
+            if (
+                !e.target.closest(".notification-btn") &&
+                !e.target.closest("#notificationBox")
+            ) {
+                box.classList.remove("show");
+            }
+        };
+
+    </script>
 
 </body>
+
 </html>
