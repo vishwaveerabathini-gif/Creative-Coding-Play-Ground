@@ -644,7 +644,7 @@ ${buttons}
     function openQuestion(titleText, descText, exampleText, fromUser) {
 
         let roomId =
-            titleText + "_" + fromUser;
+            titleText + "_" + fromUser +"_"+ currentUser;
 
         localStorage.setItem(
             "chatRoomId",
