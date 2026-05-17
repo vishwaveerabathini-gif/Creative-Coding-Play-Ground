@@ -6,7 +6,16 @@ body{
     font-family:Arial, sans-serif;
     text-align:center;
 }
+*{
+    user-select: none;
+    caret-color: transparent;
+}
 
+input,
+textarea{
+    user-select: text;
+    caret-color: auto;
+}
 h1{
     font-size:42px;
     margin-bottom:30px;

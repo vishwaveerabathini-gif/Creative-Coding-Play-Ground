@@ -1,147 +1,159 @@
-    <!DOCTYPE html>
-    <html>
+<!DOCTYPE html>
+<html>
 
-    <head>
-        <title>Questions</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<head>
+    <title>Questions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                font-family: Poppins, sans-serif;
-            }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Poppins, sans-serif;
+        }
 
-            body {
-                background: #000;
-                color: #fff;
-                padding: 30px;
-            }
+        * {
+            user-select: none;
+            caret-color: transparent;
+        }
 
-            h1 {
-                text-align: center;
-                margin-bottom: 30px;
-                font-size: 42px;
-            }
+        input,
+        textarea {
+            user-select: text;
+            caret-color: auto;
+        }
 
-            .grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-                gap: 25px;
-            }
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+        }
 
-            .card {
-                background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
-                color: #111;
-                padding: 24px;
-                border-radius: 22px;
-                box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
-                transition: .3s;
-            }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 42px;
+        }
 
-            .card:hover {
-                transform: translateY(-8px);
-            }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
 
-            .card h2 {
-                margin-bottom: 12px;
-                font-size: 30px;
-            }
+        .card {
+            background: linear-gradient(145deg, #f5f5f5, #d9d9d9);
+            color: #111;
+            padding: 24px;
+            border-radius: 22px;
+            box-shadow: 0 15px 35px rgba(255, 255, 255, .12);
+            transition: .3s;
+        }
 
-            .card p {
-                margin: 8px 0;
-                font-size: 20px;
-            }
+        .card:hover {
+            transform: translateY(-8px);
+        }
 
-            button {
-                margin-top: 14px;
-                width: 100%;
-                padding: 12px;
-                border: none;
-                border-radius: 14px;
-                background: #000;
-                color: #fff;
-                cursor: pointer;
-                font-size: 18px;
-            }
+        .card h2 {
+            margin-bottom: 12px;
+            font-size: 30px;
+        }
 
-            button:hover {
-                background: #222;
-            }
-        </style>
-    </head>
+        .card p {
+            margin: 8px 0;
+            font-size: 20px;
+        }
 
-    <body>
+        button {
+            margin-top: 14px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+        }
 
-        <h1 id="title"></h1>
+        button:hover {
+            background: #222;
+        }
+    </style>
+</head>
 
-        <div class="grid" id="questions"></div>
+<body>
 
-        <script>
+    <h1 id="title"></h1>
 
-            const params = new URLSearchParams(window.location.search);
-            const topic = params.get("topic") || "Questions";
+    <div class="grid" id="questions"></div>
 
-            document.getElementById("title").innerText =
-                topic + " Questions";
+    <script>
 
-            fetch("/questions/" + encodeURIComponent(topic))
-                .then(res => res.json())
-                .then(data => {
+        const params = new URLSearchParams(window.location.search);
+        const topic = params.get("topic") || "Questions";
 
-                    const container =
-                        document.getElementById("questions");
+        document.getElementById("title").innerText =
+            topic + " Questions";
 
-                    container.innerHTML = "";
+        fetch("/questions/" + encodeURIComponent(topic))
+            .then(res => res.json())
+            .then(data => {
 
-                    data.forEach((item) => {
+                const container =
+                    document.getElementById("questions");
 
-                        const name = item.title || item.q;
+                container.innerHTML = "";
 
-                        const div = document.createElement("div");
-                        div.className = "card";
+                data.forEach((item) => {
 
-                        div.innerHTML = `
+                    const name = item.title || item.q;
+
+                    const div = document.createElement("div");
+                    div.className = "card";
+
+                    div.innerHTML = `
 <h2>${name}</h2>
 <p><b>Level:</b> ${item.level || "Easy"}</p>
 <p><b>Acceptance:</b> ${item.rate || "80%"}</p>
 <button>Open Question</button>
 `;
 
-                        div.querySelector("button").onclick = function () {
+                    div.querySelector("button").onclick = function () {
 
-                            const selectedQuestion = {
-                                title: name,
-                                desc: item.desc || "Solve this coding problem.",
-                                example: item.example || "Write code and test it.",
-                                level: item.level || "Easy",
-                                rate: item.rate || "80%",
-                                topic: topic
-                            };
-
-                            localStorage.removeItem("questionData");
-
-                            localStorage.setItem(
-                                "questionData",
-                                JSON.stringify(selectedQuestion)
-                            );
-
-                            window.location.href = "editor.html";
-
+                        const selectedQuestion = {
+                            title: name,
+                            desc: item.desc || "Solve this coding problem.",
+                            example: item.example || "Write code and test it.",
+                            level: item.level || "Easy",
+                            rate: item.rate || "80%",
+                            topic: topic
                         };
 
-                        container.appendChild(div);
+                        localStorage.removeItem("questionData");
 
-                    });
+                        localStorage.setItem(
+                            "questionData",
+                            JSON.stringify(selectedQuestion)
+                        );
 
-                })
-                .catch(() => {
-                    document.getElementById("questions").innerHTML =
-                        "<h2>No Questions Found</h2>";
+                        window.location.href = "editor.html";
+
+                    };
+
+                    container.appendChild(div);
+
                 });
 
-        </script>
+            })
+            .catch(() => {
+                document.getElementById("questions").innerHTML =
+                    "<h2>No Questions Found</h2>";
+            });
 
-    </body>
-    </html>
+    </script>
+
+</body>
+
+</html>

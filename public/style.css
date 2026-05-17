@@ -5,6 +5,17 @@
     box-sizing: border-box;
 }
 
+* {
+    user-select: none;
+    caret-color: transparent;
+}
+
+input,
+textarea {
+    user-select: text;
+    caret-color: auto;
+}
+
 /* ================= BODY ================= */
 body {
     font-family: 'Poppins', sans-serif;
