@@ -2,6 +2,7 @@ const Chat = require("./models/Chat");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 
 const app = express();
 
@@ -11,11 +12,31 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/HomePage.html");
 });
 app.use(bodyParser.json({ limit: "50mb" }));
+app.use(session({
+    secret: "creativecodingsecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}));
 app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGO_URL)
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
+
+function isLoggedIn(req, res, next) {
+
+    if (req.session.user) {
+        next();
+    } else {
+        res.status(401).json({
+            msg: "Login required"
+        });
+    }
+}
 
 const User = require("./models/User");
 const questions = require("./questions");
@@ -62,7 +83,9 @@ app.post("/login", async (req, res) => {
         }
 
         if (user.password === password) {
+            req.session.user = user.username;
             res.json({ msg: "Login success" });
+
         } else {
             res.json({ msg: "Wrong password" });
         }
@@ -75,7 +98,7 @@ app.post("/login", async (req, res) => {
 
 /* ================= PROFILE ================= */
 
-app.get("/profile/:username", async (req, res) => {
+app.get("/profile/:username", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -92,7 +115,7 @@ app.get("/profile/:username", async (req, res) => {
 
 });
 
-app.post("/updateProfile", async (req, res) => {
+app.post("/updateProfile", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -124,7 +147,7 @@ app.post("/updateProfile", async (req, res) => {
 
 /* ================= USERS ================= */
 
-app.get("/allUsers", async (req, res) => {
+app.get("/allUsers", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -143,7 +166,7 @@ app.get("/allUsers", async (req, res) => {
 
 /* ================= FOLLOW SYSTEM ================= */
 
-app.post("/followUser", async (req, res) => {
+app.post("/followUser", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -218,7 +241,7 @@ app.post("/followUser", async (req, res) => {
 
 });
 
-app.post("/unfollowUser", async (req, res) => {
+app.post("/unfollowUser", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -254,7 +277,7 @@ app.post("/unfollowUser", async (req, res) => {
 
 });
 
-app.get("/followers/:username", async (req, res) => {
+app.get("/followers/:username", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -270,7 +293,7 @@ app.get("/followers/:username", async (req, res) => {
 
 });
 
-app.get("/following/:username", async (req, res) => {
+app.get("/following/:username", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -288,7 +311,7 @@ app.get("/following/:username", async (req, res) => {
 
 /* ================= FRIENDS ================= */
 
-app.post("/addFriend", async (req, res) => {
+app.post("/addFriend", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -316,7 +339,7 @@ app.post("/addFriend", async (req, res) => {
 
 });
 
-app.post("/removeFriend", async (req, res) => {
+app.post("/removeFriend", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -340,7 +363,7 @@ app.post("/removeFriend", async (req, res) => {
 
 });
 
-app.get("/friends/:username", async (req, res) => {
+app.get("/friends/:username", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -358,7 +381,7 @@ app.get("/friends/:username", async (req, res) => {
 
 /* ================= NOTIFICATIONS ================= */
 
-app.get("/notifications/:username", async (req, res) => {
+app.get("/notifications/:username", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -374,7 +397,7 @@ app.get("/notifications/:username", async (req, res) => {
 
 });
 
-app.post("/clearNotifications", async (req, res) => {
+app.post("/clearNotifications", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -395,7 +418,7 @@ app.post("/clearNotifications", async (req, res) => {
 
 /* ================= HELP REQUEST ================= */
 
-app.post("/sendHelp", async (req, res) => {
+app.post("/sendHelp", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -429,7 +452,7 @@ app.post("/sendHelp", async (req, res) => {
 
 });
 
-app.get("/helpRequests/:username", async (req, res) => {
+app.get("/helpRequests/:username", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -445,7 +468,7 @@ app.get("/helpRequests/:username", async (req, res) => {
 
 });
 
-app.post("/clearOneHelpRequest", async (req, res) => {
+app.post("/clearOneHelpRequest", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -469,7 +492,7 @@ app.post("/clearOneHelpRequest", async (req, res) => {
 });
 
 /* clear after solve */
-app.post("/clearSolvedHelpRequest", async (req, res) => {
+app.post("/clearSolvedHelpRequest", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -494,7 +517,7 @@ app.post("/clearSolvedHelpRequest", async (req, res) => {
 
 /* ================= SOLVE ================= */
 
-app.post("/solveQuestion", async (req, res) => {
+app.post("/solveQuestion", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -555,7 +578,7 @@ app.post("/solveQuestion", async (req, res) => {
 
 /* ================= RANKINGS ================= */
 
-app.get("/rankings", async (req, res) => {
+app.get("/rankings", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -649,7 +672,7 @@ app.get("/deleteAllUsers", async (req, res) => {
 });
 /* ================= ACCEPT HELP ================= */
 
-app.post("/acceptHelp", async (req, res) => {
+app.post("/acceptHelp", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -713,7 +736,7 @@ app.post("/acceptHelp", async (req, res) => {
 
 /* ================= REJECT HELP ================= */
 
-app.post("/rejectHelp", async (req, res) => {
+app.post("/rejectHelp", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -738,7 +761,7 @@ app.post("/rejectHelp", async (req, res) => {
 /* ================= SERVER ================= */
 /* ================= SEND MESSAGE ================= */
 
-app.post("/sendMessage", async (req, res) => {
+app.post("/sendMessage", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -762,7 +785,7 @@ app.post("/sendMessage", async (req, res) => {
 });
 /* ================= LOAD MESSAGES ================= */
 
-app.get("/messages/:roomId", async (req, res) => {
+app.get("/messages/:roomId", isLoggedIn, async (req, res) => {
 
     try {
 
@@ -779,7 +802,7 @@ app.get("/messages/:roomId", async (req, res) => {
     }
 
 });
-app.post("/eligibleHelpers", async (req, res) => {
+app.post("/eligibleHelpers", isLoggedIn, async (req, res) => {
 
     try {
 
