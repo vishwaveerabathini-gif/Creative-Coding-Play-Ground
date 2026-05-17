@@ -292,6 +292,27 @@ ${msg}
                 notifyBox.style.display = "block";
             }
         }
+        document.addEventListener("click", function (e) {
+
+            let bell =
+                document.querySelector(".bell");
+
+            let notifyBox =
+                document.getElementById("notifyBox");
+
+            /* Bell clicked */
+            if (bell.contains(e.target)) {
+                return;
+            }
+
+            /* Clicked inside notification */
+            if (notifyBox.contains(e.target)) {
+                return;
+            }
+
+            /* Outside click */
+            notifyBox.style.display = "none";
+        });
 
         /* START */
         loadProfile();
